@@ -1,0 +1,34 @@
+<a class="skip-link" href="#main" (click)="skipToMain($event)"
+  >Skip to main content</a
+>
+
+<header class="site-header">
+  <div class="theme-picker">
+    <label for="theme-select">Theme</label>
+    <select
+      id="theme-select"
+      [value]="theme.theme()"
+      (change)="onThemeChange($event)"
+    >
+      @for (option of themeOptions; track option.value) {
+      <option
+        [value]="option.value"
+        [selected]="option.value === theme.theme()"
+      >
+        {{ option.label }}
+      </option>
+      }
+    </select>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <p>
+    Demo of the framework-agnostic <code>tins-*</code> web components. Target:
+    WCAG 2.2 Level AAA.
+  </p>
+</footer>

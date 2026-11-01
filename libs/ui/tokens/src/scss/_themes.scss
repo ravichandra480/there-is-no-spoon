@@ -1,0 +1,105 @@
+// Single source of truth for theme values. Every theme must meet WCAG 2.2 AAA:
+//   text pairs ≥ 7:1, UI boundaries / focus ≥ 3:1 (checked by src/lib/contrast.spec.ts).
+@use 'sass:map';
+
+$light: (
+  'color-text': #1a1a1a,
+  'color-text-muted': #3d3d3d,
+  'color-surface': #ffffff,
+  'color-surface-raised': #f3f3f3,
+  'color-row-hover': #f3f3f3,
+  'color-row-selected': #e3ecfa,
+  'color-row-selected-hover': #d0def5,
+  'color-border': #595959,
+  'color-focus-ring': #0b3d91,
+  'color-primary': #0b3d91,
+  'color-primary-hover': #072a66,
+  'color-on-primary': #ffffff,
+  'color-danger': #8f0000,
+  'color-link': #0b3d91,
+  'color-success': #2e7d32,
+);
+
+$dark: (
+  'color-text': #f2f2f2,
+  'color-text-muted': #cfcfcf,
+  'color-surface': #121212,
+  'color-surface-raised': #1e1e1e,
+  'color-row-hover': #1e1e1e,
+  'color-row-selected': #1b2a42,
+  'color-row-selected-hover': #243756,
+  'color-border': #a3a3a3,
+  'color-focus-ring': #9ec1ff,
+  'color-primary': #9ec1ff,
+  'color-primary-hover': #c4d9ff,
+  'color-on-primary': #0a0a0a,
+  'color-danger': #ffaaaa,
+  'color-link': #9ec1ff,
+  'color-success': #81c784,
+);
+
+$high-contrast: (
+  'color-text': #ffffff,
+  'color-text-muted': #ffffff,
+  'color-surface': #000000,
+  'color-surface-raised': #000000,
+  'color-row-hover': #262626,
+  'color-row-selected': #00004d,
+  'color-row-selected-hover': #000080,
+  'color-border': #ffffff,
+  'color-focus-ring': #ffff00,
+  'color-primary': #ffff00,
+  'color-primary-hover': #ffffff,
+  'color-on-primary': #000000,
+  'color-danger': #ff9a9a,
+  'color-link': #ffff00,
+  'color-success': #00ff00,
+);
+
+// Forced-colors (Windows High Contrast) maps tokens onto CSS system colors.
+$forced-colors: (
+  'color-text': CanvasText,
+  'color-text-muted': CanvasText,
+  'color-surface': Canvas,
+  'color-surface-raised': Canvas,
+  'color-row-hover': Canvas,
+  'color-row-selected': Canvas,
+  'color-row-selected-hover': Canvas,
+  'color-border': ButtonBorder,
+  'color-focus-ring': Highlight,
+  'color-primary': ButtonText,
+  'color-primary-hover': Highlight,
+  'color-on-primary': ButtonFace,
+  'color-danger': CanvasText,
+  'color-link': LinkText,
+  'color-success': CanvasText,
+);
+
+// Theme-independent tokens.
+$base: (
+  'font-family': (system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif),
+  'font-size-base': 1rem,
+  'font-size-lg': 1.25rem,
+  'font-weight-regular': 400,
+  'font-weight-bold': 700,
+  'line-height': 1.5,
+  'space-1': 0.25rem,
+  'space-2': 0.5rem,
+  'space-3': 0.75rem,
+  'space-4': 1rem,
+  'space-6': 1.5rem,
+  'radius': 0.25rem,
+  'border-width': 2px,
+  'focus-ring-width': 3px,
+  'focus-ring-offset': 2px,
+  'target-size': 44px,
+  'motion-duration': 150ms,
+);
+
+$themes: (
+  'light': $light,
+  'dark': $dark,
+  'high-contrast': $high-contrast,
+);
+
+$default: map.merge($base, $light);

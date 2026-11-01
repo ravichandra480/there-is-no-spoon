@@ -1,0 +1,53 @@
+@use 'functions' as f;
+
+/// Visible focus indicator: ≥2px (3px default), ≥3:1, offset so it never relies on the fill (WCAG 2.4.7/2.4.13).
+@mixin focus-ring($selector: '&:focus-visible') {
+  #{$selector} {
+    outline: f.token('focus-ring-width') solid f.token('color-focus-ring');
+    outline-offset: f.token('focus-ring-offset');
+  }
+}
+
+/// Enhanced pointer target size (WCAG 2.5.5).
+@mixin target-size {
+  min-inline-size: f.token('target-size');
+  min-block-size: f.token('target-size');
+}
+
+/// Disables non-essential motion when the user asks (WCAG 2.3.3).
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Removes transitions/animations under reduced-motion.
+@mixin motion-safe-transition($properties...) {
+  transition-property: $properties;
+  transition-duration: f.token('motion-duration');
+  transition-timing-function: ease-out;
+  @include reduced-motion {
+    transition: none;
+    animation: none;
+  }
+}
+
+/// Styles for Windows High Contrast / forced colors (system colors only).
+@mixin forced-colors {
+  @media (forced-colors: active) {
+    @content;
+  }
+}
+
+/// Visually hidden but available to assistive technology.
+@mixin visually-hidden {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

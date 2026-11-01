@@ -1,0 +1,30 @@
+{
+  "name": "demo-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/demo-e2e/src",
+  "tags": ["type:e2e", "scope:demo"],
+  "implicitDependencies": ["demo"],
+  "targets": {
+    "bddgen": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx bddgen -c playwright.config.mts",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/features/**/*",
+        "{projectRoot}/steps/**/*",
+        "{projectRoot}/src/support/**/*",
+        "{projectRoot}/playwright.config.mts",
+        "{workspaceRoot}/apps/demo/src/app/routes.manifest.json",
+        { "externalDependencies": ["playwright-bdd", "@playwright/test"] }
+      ],
+      "outputs": ["{projectRoot}/.features-gen"]
+    },
+    "e2e": {
+      "dependsOn": ["^build", "bddgen"]
+    }
+  }
+}

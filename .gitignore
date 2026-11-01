@@ -1,0 +1,48 @@
+# dependencies
+node_modules/
+
+# build & test output
+tmp/
+out-tsc/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+custom-elements.json
+*.tsbuildinfo
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+.vitest-attachments/
+__screenshots__/
+
+# Nx
+.nx/cache
+.nx/workspace-data
+.nx/polygraph
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code
+.claude/worktrees
+.claude/settings.local.json
+.vitest
+
+.angular
+
+# playwright-bdd generated tests
+.features-gen/
+
+# build output (CI builds it)
+dist/
+
+# AI tooling for other agents (kept locally, not tracked; Claude config stays tracked)
+.agents/
+.github/skills/
+.github/prompts/
+.github/agents/
+AGENTS.md

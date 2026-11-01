@@ -1,0 +1,30 @@
+schema: spec-driven
+githubCopilot:
+  cloudAgent: false
+
+context: |
+  Lit web components in libs/ui/components must stay framework-agnostic: no Angular, RxJS,
+  zone.js, React, Vue or Svelte imports (enforced by bannedExternalImports in eslint.config.mjs).
+  Accessibility target is WCAG 2.2 Level AAA.
+  UI behaviour is tested in a real browser: Vitest browser mode (Chromium) for components,
+  Playwright (Chromium and WebKit) for e2e scenarios written as Gherkin features.
+  Axe findings are suppressed only through excludeRule from @tins/testing-a11y, scoped to a
+  selector, with a reason and an issue reference. Rules are never disabled globally.
+  Each component folder has an A11Y.md manual review record; CI fails when component source
+  changes without it.
+
+rules:
+  proposal:
+    - State which specs in openspec/specs/ the change adds to or modifies
+    - Say whether any component's accessibility behaviour changes
+  specs:
+    - Every requirement has at least one testable scenario (WHEN/THEN) that a unit or e2e test can check
+    - Name requirements so unit describe blocks and Gherkin scenarios can reuse the name
+    - Write keyboard and screen reader behaviour as scenarios, not prose
+  design:
+    - Keep component code free of framework imports; host integration belongs in apps/demo
+    - Any axe exclusion names the rule, selector, reason and issue it will use with excludeRule
+  tasks:
+    - Include a task to update the A11Y.md of every component whose source changes
+    - Include tests that run in a real browser (Vitest browser mode or Playwright e2e)
+    - End with npx nx run workspace:verify, node tools/scripts/check-a11y-review.mjs, npx nx affected -t lint test build e2e, and openspec validate --all --strict

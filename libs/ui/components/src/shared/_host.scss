@@ -1,0 +1,19 @@
+@use '@tins/ui-tokens/scss' as tokens;
+
+// Shared host defaults: inherit font, honour `hidden`, and keep box sizing predictable.
+:host {
+  box-sizing: border-box;
+  font-family: tokens.token('font-family');
+  font-size: tokens.token('font-size-base');
+  line-height: tokens.token('line-height');
+}
+
+:host([hidden]) {
+  display: none !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}

@@ -1,0 +1,133 @@
+<h1 tabindex="-1">File table</h1>
+<p>
+  <code>&lt;tins-file-table&gt;</code> lists files and lets you choose the
+  available ones to download together.
+</p>
+
+<h2>Files ready to download</h2>
+<p>
+  Only files with the status “Available” can be chosen. Choose files, then
+  select “Download Selected” to see an alert with the path and device of each
+  file that would be downloaded.
+</p>
+<tins-file-table
+  id="sample-files"
+  label="Files ready to download"
+  [files]="files"
+  (tins-selection-change)="onSelectionChange($event)"
+  (tins-download)="onDownload($event)"
+></tins-file-table>
+<p id="selection-event" class="event-log">
+  Last <code>tins-selection-change</code>: {{ selectedCount() }} file(s)
+  selected.
+</p>
+
+<h2>No available files</h2>
+<p>When nothing can be downloaded, select all is turned off.</p>
+<tins-file-table
+  label="Scheduled files"
+  [files]="scheduledOnly"
+></tins-file-table>
+
+<h2>Empty list</h2>
+<tins-file-table label="No files" [files]="noFiles"></tins-file-table>
+
+<dialog
+  #downloadDialog
+  class="download-dialog"
+  role="alertdialog"
+  aria-labelledby="download-dialog-title"
+  aria-describedby="download-dialog-summary download-dialog-files"
+>
+  <h2 id="download-dialog-title">Download requested</h2>
+  <p id="download-dialog-summary">
+    These {{ requested().length }} file(s) would be downloaded:
+  </p>
+  <ul id="download-dialog-files">
+    @for (file of requested(); track file.device + file.path) {
+    <li>
+      <!-- &ngsp; keeps a real space between label and value (Angular drops whitespace-only text). -->
+      <dl class="download-file">
+        <div>
+          <dt>Path:</dt>&ngsp;<dd><code>{{ file.path }}</code></dd>
+        </div>&ngsp;<div>
+          <dt>Device:</dt>&ngsp;<dd>{{ file.device }}</dd>
+        </div>
+      </dl>
+    </li>
+    }
+  </ul>
+  <tins-button #closeButton autofocus (click)="closeDialog()">Close</tins-button>
+</dialog>
+
+<h2>Usage</h2>
+<pre><code>{{ usage }}</code></pre>
+
+<h2>Keyboard</h2>
+<table>
+  <caption class="visually-hidden">
+    File table keyboard interaction
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Key</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tab, Shift+Tab</td>
+      <td>
+        Move between select all, Download Selected, the table, and the check box
+        of each available file. Files that are not available are skipped.
+      </td>
+    </tr>
+    <tr>
+      <td>Space, Enter</td>
+      <td>
+        Check or uncheck the focused check box. Select all chooses every
+        available file, or clears the choice if all are chosen.
+      </td>
+    </tr>
+    <tr>
+      <td>Enter, Space</td>
+      <td>
+        On Download Selected: ask to download the chosen files. An alert lists
+        the path and device of each one and focuses its Close button.
+      </td>
+    </tr>
+    <tr>
+      <td>Escape, or Enter on Close</td>
+      <td>Close the alert. Focus goes back to Download Selected.</td>
+    </tr>
+    <tr>
+      <td>Left and Right arrows</td>
+      <td>When the table has focus on a small screen: scroll it sideways.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Accessibility notes</h2>
+<ul>
+  <li>
+    A real HTML table, so screen readers read each cell with its column name.
+  </li>
+  <li>
+    Select all shows a dash (“mixed”) when only some files are chosen. The
+    number chosen is announced when it changes.
+  </li>
+  <li>
+    Files that cannot be downloaded have a turned-off check box that says why.
+  </li>
+  <li>
+    The download alert is read out when it opens: its title, the number of
+    files, and the path and device of each.
+  </li>
+  <li>
+    The green dot is extra: the word “Available” always says the same thing.
+  </li>
+  <li>
+    Check boxes and the button are at least 44 by 44 pixels, with a 3 pixel
+    focus ring.
+  </li>
+</ul>

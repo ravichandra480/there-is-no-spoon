@@ -1,0 +1,9 @@
+[
+  {
+    "path": "file-table",
+    "page": "file-table",
+    "title": "File table",
+    "navLabel": "File table component",
+    "element": "tins-file-table"
+  }
+]

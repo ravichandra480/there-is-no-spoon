@@ -1,0 +1,100 @@
+@use '@tins/ui-tokens/scss' as tokens;
+@use '../shared/host';
+
+:host {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+button {
+  @include tokens.target-size;
+  @include tokens.motion-safe-transition(background-color, border-color, color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: tokens.token('space-2');
+  inline-size: 100%;
+  padding-block: tokens.token('space-2');
+  padding-inline: tokens.token('space-4');
+  border: tokens.token('border-width') solid tokens.token('color-primary');
+  border-radius: tokens.token('radius');
+  font: inherit;
+  font-weight: tokens.token('font-weight-bold');
+  line-height: tokens.token('line-height');
+  cursor: pointer;
+  // Text may wrap under text-spacing overrides instead of being clipped (WCAG 1.4.12).
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+@include tokens.focus-ring('button:focus-visible');
+
+:host([variant='primary']) button,
+:host(:not([variant])) button {
+  background-color: tokens.token('color-primary');
+  color: tokens.token('color-on-primary');
+}
+
+:host([variant='primary']) button:hover:not(:disabled),
+:host(:not([variant])) button:hover:not(:disabled) {
+  background-color: tokens.token('color-primary-hover');
+  border-color: tokens.token('color-primary-hover');
+}
+
+:host([variant='secondary']) button {
+  background-color: tokens.token('color-surface');
+  color: tokens.token('color-primary');
+}
+
+:host([variant='secondary']) button:hover:not(:disabled) {
+  background-color: tokens.token('color-surface-raised');
+}
+
+// Toggle: pressed state is shown by more than color (inset ring + aria-pressed), WCAG 1.4.1.
+button[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 tokens.token('border-width')
+    tokens.token('color-surface');
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+// Disabled controls are exempt from contrast requirements, but keep the label legible.
+button:disabled {
+  cursor: not-allowed;
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+::slotted([slot='icon']) {
+  display: inline-flex;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  flex: none;
+}
+
+// Selectors repeat the variant host selectors so they outrank the variant rules above
+// (otherwise the pressed state would be indistinguishable in forced colors).
+@include tokens.forced-colors {
+  :host([variant]) button,
+  :host(:not([variant])) button {
+    border-color: ButtonText;
+    background-color: ButtonFace;
+    color: ButtonText;
+    forced-color-adjust: none;
+  }
+  :host([variant]) button:focus-visible,
+  :host(:not([variant])) button:focus-visible {
+    outline-color: Highlight;
+  }
+  :host([variant]) button[aria-pressed='true'],
+  :host(:not([variant])) button[aria-pressed='true'] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+  :host([variant]) button:disabled,
+  :host(:not([variant])) button:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+}

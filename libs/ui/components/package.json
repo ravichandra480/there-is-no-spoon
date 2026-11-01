@@ -1,0 +1,36 @@
+{
+  "name": "@tins/ui-components",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./button": {
+      "types": "./button/index.d.ts",
+      "import": "./button.js"
+    },
+    "./file-table": {
+      "types": "./file-table/index.d.ts",
+      "import": "./file-table.js"
+    },
+    "./custom-elements.json": "./custom-elements.json",
+    "./package.json": "./package.json"
+  },
+  "customElements": "custom-elements.json",
+  "sideEffects": [
+    "./index.js",
+    "./button.js",
+    "./file-table.js",
+    "./*/index.js",
+    "./src/index.ts",
+    "./src/*/index.ts"
+  ],
+  "peerDependencies": {
+    "lit": "^3.0.0"
+  }
+}
