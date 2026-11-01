@@ -1,0 +1,199 @@
+// Global demo styles. Colors, spacing and sizes come from @tins/ui-tokens custom properties, so
+// every theme (light, dark, high contrast, forced colors) applies without extra rules.
+@use '@tins/ui-tokens/scss' as tokens;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: tokens.token('color-surface');
+  color: tokens.token('color-text');
+  font-family: tokens.token('font-family');
+  font-size: 100%;
+  line-height: tokens.token('line-height');
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  overflow-wrap: anywhere;
+}
+
+// All non-essential motion stops when the user asks for reduced motion (WCAG 2.3.3).
+@include tokens.reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+a {
+  color: tokens.token('color-link');
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: tokens.token('focus-ring-width') solid
+    tokens.token('color-focus-ring');
+  outline-offset: tokens.token('focus-ring-offset');
+}
+
+// Headings and <main> receive programmatic focus (route change, skip link): show where focus is.
+h1[tabindex='-1']:focus,
+main[tabindex='-1']:focus {
+  outline: tokens.token('focus-ring-width') solid
+    tokens.token('color-focus-ring');
+  outline-offset: tokens.token('focus-ring-offset');
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: tokens.token('space-2');
+  inset-block-start: tokens.token('space-2');
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  padding: tokens.token('space-2') tokens.token('space-4');
+  background-color: tokens.token('color-surface');
+  color: tokens.token('color-link');
+  font-weight: tokens.token('font-weight-bold');
+  @include tokens.target-size;
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: tokens.token('space-3');
+  padding: tokens.token('space-3') tokens.token('space-4');
+  border-block-end: tokens.token('border-width') solid
+    tokens.token('color-border');
+}
+
+.site-name {
+  display: inline-flex;
+  align-items: center;
+  font-size: tokens.token('font-size-lg');
+  font-weight: tokens.token('font-weight-bold');
+  @include tokens.target-size;
+}
+
+.theme-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: tokens.token('space-2');
+
+  select {
+    @include tokens.target-size;
+    padding-inline: tokens.token('space-2');
+    border: tokens.token('border-width') solid tokens.token('color-border');
+    border-radius: tokens.token('radius');
+    background-color: tokens.token('color-surface-raised');
+    color: tokens.token('color-text');
+    font: inherit;
+  }
+}
+
+main {
+  flex: 1;
+  inline-size: 100%;
+  max-inline-size: 60rem;
+  margin-inline: auto;
+  padding: tokens.token('space-4');
+}
+
+.site-footer {
+  padding: tokens.token('space-3') tokens.token('space-4');
+  border-block-start: tokens.token('border-width') solid
+    tokens.token('color-border');
+  color: tokens.token('color-text-muted');
+}
+
+// Shared page building blocks.
+pre {
+  margin: 0;
+  padding: tokens.token('space-3');
+  border: tokens.token('border-width') solid tokens.token('color-border');
+  border-radius: tokens.token('radius');
+  background-color: tokens.token('color-surface-raised');
+  // Wrap instead of scrolling horizontally at 320px (WCAG 1.4.10).
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+th,
+td {
+  padding: tokens.token('space-2');
+  border: tokens.token('border-width') solid tokens.token('color-border');
+  text-align: start;
+  vertical-align: top;
+}
+
+.visually-hidden {
+  @include tokens.visually-hidden;
+}
+
+// File table page: download confirmation dialog.
+.download-dialog {
+  max-inline-size: min(40rem, calc(100vw - 2 * #{tokens.token('space-4')}));
+  padding: tokens.token('space-6');
+  border: tokens.token('border-width') solid tokens.token('color-border');
+  border-radius: tokens.token('radius');
+  background-color: tokens.token('color-surface');
+  color: tokens.token('color-text');
+
+  h2 {
+    margin-block-start: 0;
+  }
+
+  li {
+    margin-block-end: tokens.token('space-2');
+    overflow-wrap: anywhere;
+  }
+
+  // One labelled "Path:" / "Device:" line each per requested file.
+  .download-file {
+    margin: 0;
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: tokens.token('space-2');
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &::backdrop {
+    background-color: rgb(0 0 0 / 0.6);
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "declaration": false,
+    "importHelpers": true,
+    "types": [],
+    "paths": {
+      "@tins/testing-a11y": [
+        "./libs/testing/a11y/src/index.ts"
+      ],
+      "@tins/testing-a11y/*": [
+        "./libs/testing/a11y/src/*.ts"
+      ],
+      "@tins/ui-tokens": [
+        "./libs/ui/tokens/src/index.ts"
+      ],
+      "@tins/ui-components": [
+        "./libs/ui/components/src/index.ts"
+      ],
+      "@tins/ui-components/*": [
+        "./libs/ui/components/src/*/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp",
+    "dist"
+  ]
+}

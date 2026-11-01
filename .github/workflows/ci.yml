@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # nx affected and the A11Y.md check compare against the base commit
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Chromium for Vitest browser mode; all three engines for the demo e2e suite.
+      - run: npx playwright install --with-deps chromium webkit
+
+      # Sets NX_BASE / NX_HEAD for `nx affected` (last successful main build, or the PR base).
+      - uses: nrwl/nx-set-shas@v4
+
+      - name: Repository checks (Nx versions, module boundaries)
+        run: npx nx run workspace:verify
+
+      - name: Manual accessibility review records (A11Y.md)
+        run: node tools/scripts/check-a11y-review.mjs --base "$NX_BASE" --head "$NX_HEAD"
+
+      - name: Lint, unit test, build, e2e (affected projects)
+        run: npx nx affected -t lint test build e2e --parallel=3
+
+      # On main, always produce a Playwright report, even when e2e wasn't affected (e.g. docs-only
+      # pushes). If the affected step already ran e2e, this is a local Nx cache hit that restores
+      # the report outputs instead of re-running the suite.
+      - name: E2E (always on main)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: npx nx run demo-e2e:e2e
+
+      # Skipped when demo-e2e wasn't affected (e.g. docs-only changes), so no report exists.
+      - name: Upload Playwright report (incl. axe results)
+        if: ${{ !cancelled() && hashFiles('dist/.playwright/apps/demo-e2e/**') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            dist/.playwright/apps/demo-e2e/playwright-report
+            dist/.playwright/apps/demo-e2e/test-results
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,287 @@
+@use '@tins/ui-tokens/scss' as tokens;
+@use '../shared/host';
+
+$box: 1.125rem; // visual checkbox size (18px); the hit target around it is 44px
+
+:host {
+  display: block;
+  color: tokens.token('color-text');
+  background-color: tokens.token('color-surface');
+  border: 1px solid tokens.token('color-border');
+}
+
+.visually-hidden {
+  @include tokens.visually-hidden;
+}
+
+// ── Toolbar ──────────────────────────────────────────────────────────────────
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap; // reflow at 320px (WCAG 1.4.10)
+  align-items: center;
+  gap: tokens.token('space-2') tokens.token('space-6');
+  padding-inline: tokens.token('space-1') tokens.token('space-4');
+  border-block-end: 1px solid tokens.token('color-border');
+}
+
+.count {
+  font-size: tokens.token('font-size-lg');
+  min-inline-size: 8ch; // keeps the button from jumping as the count changes
+}
+
+.action {
+  @include tokens.target-size;
+  display: inline-flex;
+  align-items: center;
+  gap: tokens.token('space-2');
+  padding-inline: tokens.token('space-2');
+  border: tokens.token('border-width') solid transparent;
+  border-radius: tokens.token('radius');
+  background: none;
+  color: tokens.token('color-primary');
+  font: inherit;
+  font-size: tokens.token('font-size-lg');
+  cursor: pointer;
+  @include tokens.motion-safe-transition(background-color);
+
+  svg {
+    inline-size: 1.5em;
+    block-size: 1.5em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: tokens.token('color-surface-raised');
+  }
+
+  // Disabled controls are exempt from contrast (1.4.3), but keep the label readable.
+  &:disabled {
+    color: tokens.token('color-text-muted');
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+}
+
+@include tokens.focus-ring('.action:focus-visible');
+
+// ── Checkboxes ───────────────────────────────────────────────────────────────
+// The native input is the 44×44 hit target (WCAG 2.5.5); the visible box and mark are drawn
+// with pseudo-elements so the look matches the design in every browser and theme.
+
+.check {
+  display: inline-flex;
+}
+
+input[type='checkbox'] {
+  @include tokens.target-size;
+  appearance: none;
+  position: relative;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    inline-size: $box;
+    block-size: $box;
+    border: tokens.token('border-width') solid tokens.token('color-border');
+    border-radius: 2px;
+    background-color: tokens.token('color-surface');
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+  }
+
+  &:checked::before,
+  &:indeterminate::before {
+    border-color: tokens.token('color-primary');
+    background-color: tokens.token('color-primary');
+  }
+
+  // Check mark.
+  &:checked::after {
+    inline-size: 0.35rem;
+    block-size: 0.65rem;
+    border: solid tokens.token('color-on-primary');
+    border-width: 0 2px 2px 0;
+    transform: translateY(-1px) rotate(45deg);
+  }
+
+  // Indeterminate dash (select-all with a partial selection).
+  &:indeterminate::after {
+    inline-size: 0.6rem;
+    block-size: 2px;
+    background-color: tokens.token('color-on-primary');
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  // Not selectable: a filled, lighter box (the reason is exposed via aria-describedby).
+  &:disabled::before {
+    background-color: tokens.token('color-surface-raised');
+    opacity: 0.6;
+  }
+}
+
+@include tokens.focus-ring('input[type="checkbox"]:focus-visible');
+
+// The ring hugs the visible box rather than the 44px target: a negative offset puts its inner
+// edge 2px outside the 18px box.
+input[type='checkbox']:focus-visible {
+  outline-offset: calc(-0.5 * (#{tokens.token('target-size')} - #{$box}) + 2px);
+}
+
+// ── Table ────────────────────────────────────────────────────────────────────
+
+.scroll {
+  overflow-x: auto; // data tables may scroll in two dimensions (WCAG 1.4.10 exception)
+}
+
+@include tokens.focus-ring('.scroll:focus-visible');
+
+.scroll:focus-visible {
+  outline-offset: calc(-1 * #{tokens.token('focus-ring-width')});
+}
+
+table {
+  inline-size: 100%;
+  // Below this width the table scrolls inside its region instead of crushing the columns.
+  min-inline-size: 36rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th,
+td {
+  padding-block: 0;
+  padding-inline: tokens.token('space-4');
+  text-align: start;
+  vertical-align: middle;
+  block-size: tokens.token('target-size');
+}
+
+th {
+  font-weight: tokens.token('font-weight-regular');
+  font-size: tokens.token('font-size-base');
+  color: tokens.token('color-text-muted');
+  padding-block: tokens.token('space-3');
+}
+
+tbody tr {
+  border-block-start: 1px solid tokens.token('color-border');
+}
+
+.select-col {
+  inline-size: 1px; // shrink to the checkbox
+  padding-inline: tokens.token('space-1') 0;
+}
+
+// Short columns never wrap; on narrow screens the table scrolls inside its region instead.
+th,
+td:not(.path) {
+  white-space: nowrap;
+}
+
+.path {
+  overflow-wrap: anywhere; // long paths wrap instead of being clipped
+}
+
+.dot {
+  display: inline-block;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  margin-inline-end: tokens.token('space-2');
+  border-radius: 50%;
+  background-color: tokens.token('color-success');
+  vertical-align: -0.125rem;
+}
+
+.empty {
+  padding-block: tokens.token('space-4');
+  text-align: center;
+  color: tokens.token('color-text-muted');
+}
+
+// Four distinct row states: default, hovered, selected, and selected while hovered. Every file row
+// (`data-index`) shows hover feedback, including unavailable ones; only selectable rows get the
+// pointer cursor because clicking anything else does nothing. The "No files" row has no
+// `data-index`, so it never reacts to hover.
+tbody tr {
+  @include tokens.motion-safe-transition(background-color);
+}
+
+tr.selectable {
+  cursor: pointer;
+}
+
+tr[data-index]:hover {
+  background-color: tokens.token('color-row-hover');
+}
+
+tr.selected {
+  background-color: tokens.token('color-row-selected');
+}
+
+tr.selected:hover {
+  background-color: tokens.token('color-row-selected-hover');
+}
+
+@include tokens.forced-colors {
+  input[type='checkbox'] {
+    forced-color-adjust: none;
+  }
+  input[type='checkbox']::before {
+    border-color: ButtonText;
+    background-color: Canvas;
+  }
+  input[type='checkbox']:checked::before,
+  input[type='checkbox']:indeterminate::before {
+    border-color: Highlight;
+    background-color: Highlight;
+  }
+  input[type='checkbox']:checked::after {
+    border-color: HighlightText;
+  }
+  input[type='checkbox']:indeterminate::after {
+    background-color: HighlightText;
+  }
+  input[type='checkbox']:disabled::before {
+    border-color: GrayText;
+  }
+  input[type='checkbox']:focus-visible,
+  .action:focus-visible,
+  .scroll:focus-visible {
+    outline-color: Highlight;
+  }
+  // Background colors are dropped in forced colors; outlines carry the row state instead:
+  // dashed for hover, solid for selected (also while hovered).
+  tr[data-index]:hover {
+    outline: 2px dashed Highlight;
+    outline-offset: -2px;
+  }
+  tr.selected,
+  tr.selected:hover {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+  .dot {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+  .action:disabled {
+    color: GrayText;
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "name": "there-is-no-spoon",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.9.4",
+    "@analogjs/vitest-angular": "^2.9.4",
+    "@angular-devkit/core": "~22.2.0",
+    "@angular-devkit/schematics": "~22.2.0",
+    "@angular/build": "~22.2.0",
+    "@axe-core/playwright": "^4.14.0",
+    "@custom-elements-manifest/analyzer": "^0.11.0",
+    "@eslint/js": "^9.8.0",
+    "@nx/angular": "24.0.3",
+    "@nx/devkit": "24.0.3",
+    "@nx/eslint": "24.0.3",
+    "@nx/eslint-plugin": "24.0.3",
+    "@nx/js": "24.0.3",
+    "@nx/playwright": "24.0.3",
+    "@nx/vite": "24.0.3",
+    "@nx/vitest": "24.0.3",
+    "@nx/web": "24.0.3",
+    "@oxc-project/runtime": "^0.115.0",
+    "@playwright/test": "^1.64.1",
+    "@schematics/angular": "~22.2.0",
+    "@swc/helpers": "~0.5.18",
+    "@types/node": "^22.20.5",
+    "@typescript-eslint/utils": "^8.58.0",
+    "@vitest/browser-playwright": "^5.0.5",
+    "@vitest/coverage-istanbul": "^5.0.5",
+    "@vitest/coverage-v8": "~5.0.1",
+    "@vitest/ui": "~5.0.1",
+    "ajv": "^8.0.0",
+    "angular-eslint": "^22.5.0",
+    "axe-core": "^4.14.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-lit": "^2.3.1",
+    "eslint-plugin-lit-a11y": "^5.1.3",
+    "eslint-plugin-playwright": "^1.6.2",
+    "jiti": "2.4.2",
+    "jsdom": "^27.1.0",
+    "jsonc-eslint-parser": "^2.1.0",
+    "nx": "24.0.3",
+    "playwright": "^1.64.1",
+    "playwright-bdd": "^9.2.1",
+    "prettier": "~3.6.2",
+    "sass": "^1.107.1",
+    "tslib": "^2.9.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.58.0",
+    "vite": "^8.0.0",
+    "vite-plugin-dts": "~4.5.0",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vite-plugin-static-copy": "^3.3.0",
+    "vitest": "^5.0.5"
+  },
+  "scripts": {
+    "verify": "nx run workspace:verify"
+  },
+  "nx": {
+    "name": "workspace",
+    "tags": [
+      "type:util",
+      "scope:workspace"
+    ],
+    "includedScripts": [],
+    "targets": {
+      "verify": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            "node tools/scripts/check-nx-versions.mjs",
+            "node tools/scripts/check-boundaries.mjs"
+          ],
+          "parallel": false,
+          "cwd": "{workspaceRoot}"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@angular/common": "~22.2.0",
+    "@angular/compiler": "~22.2.0",
+    "@angular/core": "~22.2.0",
+    "@angular/forms": "~22.2.0",
+    "@angular/platform-browser": "~22.2.0",
+    "@angular/router": "~22.2.0",
+    "lit": "^3.3.3",
+    "rxjs": "~7.8.0"
+  }
+}

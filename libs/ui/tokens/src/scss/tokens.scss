@@ -1,0 +1,51 @@
+// Emits CSS custom properties for every theme.
+//   :root                                → light (or dark when the OS prefers dark and no theme is chosen)
+//   [data-theme='light'|'dark'|'high-contrast'] → explicit theme
+//   @media (forced-colors: active)        → system colors
+@use 'sass:map';
+@use 'sass:meta';
+@use 'themes';
+@use 'functions' as f;
+
+@mixin emit($map) {
+  @each $name, $value in $map {
+    --#{f.$prefix}-#{$name}: #{meta.inspect($value)};
+  }
+}
+
+:root {
+  @include emit(themes.$base);
+  @include emit(themes.$light);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include emit(themes.$dark);
+    color-scheme: dark;
+  }
+}
+
+@each $theme, $map in themes.$themes {
+  [data-theme='#{$theme}'] {
+    @include emit($map);
+    @if $theme == 'light' {
+      color-scheme: light;
+    } @else {
+      color-scheme: dark;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --#{f.$prefix}-motion-duration: 0ms;
+  }
+}
+
+@media (forced-colors: active) {
+  :root,
+  [data-theme] {
+    @include emit(themes.$forced-colors);
+  }
+}

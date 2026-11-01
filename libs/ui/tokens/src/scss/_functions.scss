@@ -1,0 +1,14 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'themes';
+
+$prefix: 'tins' !default;
+
+/// Returns `var(--tins-<name>, <light default>)`, so components render the default theme
+/// even when the host page loads no token CSS.
+@function token($name) {
+  @if not map.has-key(themes.$default, $name) {
+    @error 'Unknown design token "#{$name}". Known tokens: #{map.keys(themes.$default)}';
+  }
+  @return var(--#{$prefix}-#{$name}, #{meta.inspect(map.get(themes.$default, $name))});
+}

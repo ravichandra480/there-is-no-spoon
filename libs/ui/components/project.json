@@ -1,0 +1,59 @@
+{
+  "name": "ui-components",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/components/src",
+  "projectType": "library",
+  "tags": [
+    "type:ui",
+    "scope:ui"
+  ],
+  "targets": {
+    "cem": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "production"
+      ],
+      "outputs": [
+        "{projectRoot}/custom-elements.json"
+      ],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "cem analyze --config custom-elements-manifest.config.mjs"
+      }
+    },
+    "build": {
+      "dependsOn": [
+        "^build",
+        "cem"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "coverage": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": [
+          "tsc -p tsconfig.lib.json --noEmit",
+          "tsc -p tsconfig.spec.json --noEmit"
+        ],
+        "parallel": false
+      }
+    }
+  },
+  "implicitDependencies": [
+    "ui-tokens"
+  ]
+}
